@@ -42,13 +42,13 @@ const RadiationAnalysis = () => {
   };
 
   return (
-    <div className="func-container" style={{ display: 'flex' }}>
-      <div style={{ flex: 1 }}>
-        <header className="func-text">Radiation Analysis</header>
-        
-        <div className="func-card">
+    <div className="func-container">
+      <header className="func-text">Radiation Analysis</header>
+      
+      <div className="func-left">
+        <div className="func-small-card">
           <h2 className="func-text">Flare Position</h2>
-          <form onSubmit={handleSubmit}>
+          <form>
             <div>
               <label>X Dist from Origin (ft):</label>
               <input type="number" name="xFlare" value={formData.xFlare} onChange={handleChange} required />
@@ -64,9 +64,9 @@ const RadiationAnalysis = () => {
           </form>
         </div>
 
-        <div className="func-card">
+        <div className="func-small-card">
           <h2 className="func-text">Radiation Analysis Starting Point</h2>
-          <form onSubmit={handleSubmit}>
+          <form>
             <div>
               <label>X Dist from Origin (ft):</label>
               <input type="number" name="xTransectStart" value={formData.xTransectStart} onChange={handleChange} required />
@@ -82,9 +82,9 @@ const RadiationAnalysis = () => {
           </form>
         </div>
 
-        <div className="func-card">
+        <div className="func-small-card">
           <h2 className="func-text">Radiation Analysis Ending Point</h2>
-          <form onSubmit={handleSubmit}>
+          <form>
             <div>
               <label>X Dist from Origin (ft):</label>
               <input type="number" name="xTransectFinal" value={formData.xTransectFinal} onChange={handleChange} required />
@@ -100,16 +100,14 @@ const RadiationAnalysis = () => {
           </form>
         </div>
 
+        <button type="submit" className="func-card" onClick={handleSubmit}>Submit</button>
+
+        <PlotlyViewer data={plotData} />
+
         <div className="func-card">
           <h2 className="func-text">Area Imagery</h2>
           <img src="data/area_image.png" alt="Area Imagery" />
         </div>
-
-        <button type="submit" className="func-card">Submit</button>
-      </div>
-
-      <div style={{ flex: 1 }}>
-        <PlotlyViewer data={plotData} />
       </div>
     </div>
   );

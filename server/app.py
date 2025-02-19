@@ -18,7 +18,7 @@ CORS(app, resources={
 })
 
 # endpoint - need radiation analysis
-@app.route('/api/rad', methods=['POST'])
+@app.route('/api/radiation_analysis', methods=['POST'])
 def rad_route():
     return radiation_analysis()
 
