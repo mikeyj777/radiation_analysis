@@ -1,6 +1,8 @@
 import os
 import sys
 import math
+import pickle
+import asyncio
 import pandas as pd
 from functools import reduce
 
@@ -20,7 +22,11 @@ import logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def load_vlc():
-    vlc:VesselLeakCalculation = helpers.load_pickled_object('data/vlc.pickle')
+    file_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'vlc.pickle')
+    vlc:VesselLeakCalculation
+    with open(file_path, 'rb') as f:
+        vlc = pickle.load(f)
+    return vlc
 
 def run_jet_fire_calc(vlc):
     material = vlc.exit_material
@@ -73,7 +79,7 @@ def prep_flammable_output_config(flare_position, start_position, final_position)
 
     return flam_output_config
 
-def run_radiation_transect(jetFireCalc, flam_output_config):
+async def run_radiation_transect(jetFireCalc, flam_output_config):
     flame_result = jetFireCalc.flame_result
     flame_records = jetFireCalc.flame_records
     flame_record_count = 0
@@ -90,10 +96,11 @@ def run_radiation_transect(jetFireCalc, flam_output_config):
         flammable_parameters=flammable_parameters, 
         flammable_output_config=flam_output_config)
 
-    res = radiation_transect.run()
+    res = await asyncio.to_thread(radiation_transect.run)
+
     if res != ResultCode.SUCCESS:
         logging.debug(f'Radiation transect calc failed.  response code: {res.name}\nresponses:  {radiation_transect.messages}')
-
+    logging.debug('Radiation Transect Model Complete')
     return radiation_transect
 
 def reducer(acc = [], item= None):
@@ -110,17 +117,17 @@ apple = 1
 def radiation_analysis():
 
     data = request.get_json()
-    x_flare_m = float(data.get('xFlare', 0)) / 3.28084
+    x_flare_m = float(data.get('xFlare', 45)) / 3.28084
     y_flare_m = float(data.get('yFlare', 0)) / 3.28084
     z_flare_m = float(data.get('zFlare', 50)) / 3.28084
     flare_position = LocalPosition(x = x_flare_m, y = y_flare_m, z = z_flare_m)
 
-    transect_start_x_m = float(data.get('xTransectStart', 45)) / 3.28084
+    transect_start_x_m = float(data.get('xTransectStart', 0)) / 3.28084
     transect_start_y_m = float(data.get('yTransectStart', 0)) / 3.28084
     transect_start_z_m = float(data.get('zTransectStart', 0)) / 3.28084
     transect_start_pos = LocalPosition(x=transect_start_x_m, y=transect_start_y_m, z=transect_start_z_m)
 
-    transect_final_x_m = float(data.get('xTransectFinal', 45)) / 3.28084
+    transect_final_x_m = float(data.get('xTransectFinal', 0)) / 3.28084
     transect_final_y_m = float(data.get('yTransectFinal', 0)) / 3.28084
     transect_final_z_m = float(data.get('zTransectFinal', 200)) / 3.28084
     transect_final_pos = LocalPosition(x=transect_final_x_m, y=transect_final_y_m, z=transect_final_z_m)
@@ -128,12 +135,6 @@ def radiation_analysis():
     try:
         vlc = load_vlc()
         jetFireCalc = run_jet_fire_calc(vlc)
-
-        x_flare = 45 / 3.28084 # flare at mid point between pipe racks (45 ft), near existing "RIC" flare
-        y_flare = 0
-
-        # will vary stack height to minimize impact on pipe racks
-        z_flare = 50 / 3.28084 # targeting 50-ft flare stack height
 
         # pipe racks have heights between 7 m (23 ft) and 13 m (43 ft)
         flammable_output_config = prep_flammable_output_config(flare_position=flare_position, start_position=transect_start_pos, final_position=transect_final_pos)

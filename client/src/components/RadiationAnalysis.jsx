@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PlotlyViewer from './PlotlyViewer';
 
+
+const formDataDefault = {
+  xFlare: 45,
+  yFlare: 0,
+  zFlare: 50,
+  xTransectStart: 0,
+  yTransectStart: 0,
+  zTransectStart: 0,
+  xTransectFinal: 0,
+  yTransectFinal: 0,
+  zTransectFinal: 200
+}
+
 const RadiationAnalysis = () => {
-  const [formData, setFormData] = useState({
-    xFlare: '',
-    yFlare: '',
-    zFlare: '',
-    xTransectStart: '',
-    yTransectStart: '',
-    zTransectStart: '',
-    xTransectFinal: '',
-    yTransectFinal: '',
-    zTransectFinal: ''
-  });
+  const [formData, setFormData] = useState(formDataDefault);
 
   const [plotData, setPlotData] = useState([]);
 
@@ -51,15 +54,15 @@ const RadiationAnalysis = () => {
           <form>
             <div>
               <label>X Dist from Origin (ft):</label>
-              <input type="number" name="xFlare" value={formData.xFlare || 0} onChange={handleChange} required />
+              <input type="number" name="xFlare" value={formData.xFlare} onChange={handleChange} required />
             </div>
             <div>
               <label>Y Dist from Origin (ft):</label>
-              <input type="number" name="yFlare" value={formData.yFlare || 0} onChange={handleChange} required />
+              <input type="number" name="yFlare" value={formData.yFlare} onChange={handleChange} required />
             </div>
             <div>
               <label>Z Dist from Origin (ft):</label>
-              <input type="number" name="zFlare" value={formData.zFlare || 50} onChange={handleChange} required />
+              <input type="number" name="zFlare" value={formData.zFlare} onChange={handleChange} required />
             </div>
           </form>
         </div>
@@ -69,15 +72,15 @@ const RadiationAnalysis = () => {
           <form>
             <div>
               <label>X Dist from Origin (ft):</label>
-              <input type="number" name="xTransectStart" value={formData.xTransectStart || 45} onChange={handleChange} required />
+              <input type="number" name="xTransectStart" value={formData.xTransectStart} onChange={handleChange} required />
             </div>
             <div>
               <label>Y Dist from Origin (ft):</label>
-              <input type="number" name="yTransectStart" value={formData.yTransectStart || 0} onChange={handleChange} required />
+              <input type="number" name="yTransectStart" value={formData.yTransectStart} onChange={handleChange} required />
             </div>
             <div>
               <label>Z Dist from Origin (ft):</label>
-              <input type="number" name="zTransectStart" value={formData.zTransectStart || 0} onChange={handleChange} required />
+              <input type="number" name="zTransectStart" value={formData.zTransectStart} onChange={handleChange} required />
             </div>
           </form>
         </div>
@@ -87,15 +90,15 @@ const RadiationAnalysis = () => {
           <form>
             <div>
               <label>X Dist from Origin (ft):</label>
-              <input type="number" name="xTransectFinal" value={formData.xTransectFinal || 45} onChange={handleChange} required />
+              <input type="number" name="xTransectFinal" value={formData.xTransectFinal} onChange={handleChange} required />
             </div>
             <div>
               <label>Y Dist from Origin (ft):</label>
-              <input type="number" name="yTransectFinal" value={formData.yTransectFinal || 0} onChange={handleChange} required />
+              <input type="number" name="yTransectFinal" value={formData.yTransectFinal} onChange={handleChange} required />
             </div>
             <div>
               <label>Z Dist from Origin (ft):</label>
-              <input type="number" name="zTransectFinal" value={formData.zTransectFinal || 200} onChange={handleChange} required />
+              <input type="number" name="zTransectFinal" value={formData.zTransectFinal} onChange={handleChange} required />
             </div>
           </form>
         </div>
