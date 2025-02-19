@@ -21,3 +21,6 @@ CORS(app, resources={
 @app.route('/api/rad', methods=['POST'])
 def rad_route():
     return radiation_analysis()
+
+if __name__ == '__main__':
+    app.run(debug=True)

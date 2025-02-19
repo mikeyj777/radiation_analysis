@@ -110,20 +110,20 @@ apple = 1
 def radiation_analysis():
 
     data = request.get_json()
-    x_flare = data['xFlare']
-    y_flare = data['yFlare']
-    z_flare = data['zFlare']
-    flare_position = LocalPosition(x = x_flare, y = y_flare, z = z_flare)
+    x_flare_m = data['xFlare'] / 3.28084
+    y_flare_m = data['yFlare'] / 3.28084
+    z_flare_m = data['zFlare'] / 3.28084
+    flare_position = LocalPosition(x = x_flare_m, y = y_flare_m, z = z_flare_m)
 
-    transect_start_x = data['xTransectStart']
-    transect_start_y = data['yTransectStart']
-    transect_start_z = data['zTransectStart']
-    transect_start_pos = LocalPosition(x=transect_start_x, y=transect_start_y, z=transect_start_z)
+    transect_start_x_m = data['xTransectStart'] / 3.28084
+    transect_start_y_m = data['yTransectStart'] / 3.28084
+    transect_start_z_m = data['zTransectStart'] / 3.28084
+    transect_start_pos = LocalPosition(x=transect_start_x_m, y=transect_start_y_m, z=transect_start_z_m)
 
-    transect_final_x = data['xTransectFinal']
-    transect_final_y = data['yTransectFinal']
-    transect_final_z = data['zTransectFinal']
-    transect_final_pos = LocalPosition(x=transect_final_x, y=transect_final_y, z=transect_final_z)
+    transect_final_x_m = data['xTransectFinal'] / 3.28084
+    transect_final_y_m = data['yTransectFinal'] / 3.28084
+    transect_final_z_m = data['zTransectFinal'] / 3.28084
+    transect_final_pos = LocalPosition(x=transect_final_x_m, y=transect_final_y_m, z=transect_final_z_m)
     
     try:
         vlc = load_vlc()
