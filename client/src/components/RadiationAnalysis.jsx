@@ -29,6 +29,7 @@ const RadiationAnalysis = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setPlotData([]);
     try {
       const response = await fetch('http://localhost:5000/api/radiation_analysis', {
         method: 'POST',

@@ -9,7 +9,7 @@ const PlotlyViewer = ({ data }) => {
   console.log("data from Plotly Viewer: ", JSON.stringify(data, null, 2));
 
   const trace = {
-    x: data.map(point => point.z),
+    x: data.map(point => point.z * 3.28084),
     y: data.map(point => point.rad_level_w_m2),
     mode: 'markers',
     marker: {
