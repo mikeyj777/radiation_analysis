@@ -51,15 +51,15 @@ const RadiationAnalysis = () => {
           <form>
             <div>
               <label>X Dist from Origin (ft):</label>
-              <input type="number" name="xFlare" value={formData.xFlare} onChange={handleChange} required />
+              <input type="number" name="xFlare" value={formData.xFlare || 0} onChange={handleChange} required />
             </div>
             <div>
               <label>Y Dist from Origin (ft):</label>
-              <input type="number" name="yFlare" value={formData.yFlare} onChange={handleChange} required />
+              <input type="number" name="yFlare" value={formData.yFlare || 0} onChange={handleChange} required />
             </div>
             <div>
               <label>Z Dist from Origin (ft):</label>
-              <input type="number" name="zFlare" value={formData.zFlare} onChange={handleChange} required />
+              <input type="number" name="zFlare" value={formData.zFlare || 50} onChange={handleChange} required />
             </div>
           </form>
         </div>
@@ -69,15 +69,15 @@ const RadiationAnalysis = () => {
           <form>
             <div>
               <label>X Dist from Origin (ft):</label>
-              <input type="number" name="xTransectStart" value={formData.xTransectStart} onChange={handleChange} required />
+              <input type="number" name="xTransectStart" value={formData.xTransectStart || 45} onChange={handleChange} required />
             </div>
             <div>
               <label>Y Dist from Origin (ft):</label>
-              <input type="number" name="yTransectStart" value={formData.yTransectStart} onChange={handleChange} required />
+              <input type="number" name="yTransectStart" value={formData.yTransectStart || 0} onChange={handleChange} required />
             </div>
             <div>
               <label>Z Dist from Origin (ft):</label>
-              <input type="number" name="zTransectStart" value={formData.zTransectStart} onChange={handleChange} required />
+              <input type="number" name="zTransectStart" value={formData.zTransectStart || 0} onChange={handleChange} required />
             </div>
           </form>
         </div>
@@ -87,15 +87,15 @@ const RadiationAnalysis = () => {
           <form>
             <div>
               <label>X Dist from Origin (ft):</label>
-              <input type="number" name="xTransectFinal" value={formData.xTransectFinal} onChange={handleChange} required />
+              <input type="number" name="xTransectFinal" value={formData.xTransectFinal || 45} onChange={handleChange} required />
             </div>
             <div>
               <label>Y Dist from Origin (ft):</label>
-              <input type="number" name="yTransectFinal" value={formData.yTransectFinal} onChange={handleChange} required />
+              <input type="number" name="yTransectFinal" value={formData.yTransectFinal || 0} onChange={handleChange} required />
             </div>
             <div>
               <label>Z Dist from Origin (ft):</label>
-              <input type="number" name="zTransectFinal" value={formData.zTransectFinal} onChange={handleChange} required />
+              <input type="number" name="zTransectFinal" value={formData.zTransectFinal || 0} onChange={handleChange} required />
             </div>
           </form>
         </div>
