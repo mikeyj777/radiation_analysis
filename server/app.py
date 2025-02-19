@@ -20,6 +20,7 @@ CORS(app, resources={
 # endpoint - need radiation analysis
 @app.route('/api/radiation_analysis', methods=['POST'])
 def rad_route():
+    logging.debug("here on the back end.")
     return radiation_analysis()
 
 if __name__ == '__main__':

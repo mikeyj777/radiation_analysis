@@ -95,7 +95,7 @@ const RadiationAnalysis = () => {
             </div>
             <div>
               <label>Z Dist from Origin (ft):</label>
-              <input type="number" name="zTransectFinal" value={formData.zTransectFinal || 0} onChange={handleChange} required />
+              <input type="number" name="zTransectFinal" value={formData.zTransectFinal || 200} onChange={handleChange} required />
             </div>
           </form>
         </div>
