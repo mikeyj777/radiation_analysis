@@ -4,6 +4,8 @@ import math
 import pandas as pd
 from functools import reduce
 
+from flask import request, jsonify
+
 from pypws.calculations import DispersionCalculation, VesselLeakCalculation, JetFireCalculation, RadiationTransectCalculation
 from pypws.entities import FlammableParameters, FlammableOutputConfig, Transect, LocalPosition
 from pypws.enums import ContourType, ResultCode
@@ -48,7 +50,7 @@ def run_jet_fire_calc(vlc):
 
     return jetFireCalc
 
-def prep_flammable_output_config(flare_position, start_x = 0, start_y = 0, start_z = 0, final_x = 0, final_y = 0, final_z = 200 / 3.28084):
+def prep_flammable_output_config(flare_position, start_position, final_position):
     #flam output config inputs:  
         # position: Optional[LocalPosition]=LocalPosition(), 
         # radiation_type: Optional[RadiationType]=RadiationType.INTENSITY,
@@ -62,14 +64,11 @@ def prep_flammable_output_config(flare_position, start_x = 0, start_y = 0, start
         # inclination: Optional[float]=0
     
     flam_output_config = FlammableOutputConfig()
-    # transect to analyze impact along z-axis at distance of 45 ft
-    start_pos = LocalPosition(x = start_x, y = start_y, z = start_z)
-    final_pos = LocalPosition(x=final_x, y=final_y, z= final_z)
-
     flam_output_config.position = flare_position
     flam_output_config.contour_type = ContourType.SIDEVIEW
-    flam_output_config.radiation_level = None # 2 kW/m2 is current target for analysis.  I'm not sure how this works with the transect, which is at a specific distance.  Going to try with None to see if it can report along transect alone.
-    transect = Transect(transect_start_point=start_pos, transect_end_point=final_pos)
+    # 2 kW/m2 is current target for analysis.  I'm not sure how this works with the transect, which is at a specific distance.  Going to try with None to see if it can report along transect alone.
+    flam_output_config.radiation_level = None
+    transect = Transect(transect_start_point=start_position, transect_end_point=final_position)
     flam_output_config.transect = transect
 
     return flam_output_config
@@ -109,21 +108,45 @@ def reducer(acc = [], item= None):
 apple = 1
 
 def radiation_analysis():
-    vlc = load_vlc()
-    jetFireCalc = run_jet_fire_calc(vlc)
 
-    x_flare = 45 / 3.28084 # flare at mid point between pipe racks (45 ft), near existing "RIC" flare
-    y_flare = 0
-
-    # will vary stack height to minimize impact on pipe racks
-    z_flare = 50 / 3.28084 # targeting 50-ft flare stack height
-
-    # pipe racks have heights between 7 m (23 ft) and 13 m (43 ft)
+    data = request.get_json()
+    x_flare = data['xFlare']
+    y_flare = data['yFlare']
+    z_flare = data['zFlare']
     flare_position = LocalPosition(x = x_flare, y = y_flare, z = z_flare)
-    flammable_output_config = prep_flammable_output_config(flare_position=flare_position)
 
-    radiation_transect = run_radiation_transect(jetFireCalc=jetFireCalc, flam_output_config=flammable_output_config)
-    rad_recs = radiation_transect.radiation_records
+    transect_start_x = data['xTransectStart']
+    transect_start_y = data['yTransectStart']
+    transect_start_z = data['zTransectStart']
+    transect_start_pos = LocalPosition(x=transect_start_x, y=transect_start_y, z=transect_start_z)
 
-    rad_list_of_dicts = reduce(reducer, rad_recs, [])
+    transect_final_x = data['xTransectFinal']
+    transect_final_y = data['yTransectFinal']
+    transect_final_z = data['zTransectFinal']
+    transect_final_pos = LocalPosition(x=transect_final_x, y=transect_final_y, z=transect_final_z)
+    
+    try:
+        vlc = load_vlc()
+        jetFireCalc = run_jet_fire_calc(vlc)
+
+        x_flare = 45 / 3.28084 # flare at mid point between pipe racks (45 ft), near existing "RIC" flare
+        y_flare = 0
+
+        # will vary stack height to minimize impact on pipe racks
+        z_flare = 50 / 3.28084 # targeting 50-ft flare stack height
+
+        # pipe racks have heights between 7 m (23 ft) and 13 m (43 ft)
+        flammable_output_config = prep_flammable_output_config(flare_position=flare_position, start_position=transect_start_pos, final_position=transect_final_pos)
+
+        radiation_transect = run_radiation_transect(jetFireCalc=jetFireCalc, flam_output_config=flammable_output_config)
+        rad_recs = radiation_transect.radiation_records
+
+        rad_list_of_dicts = reduce(reducer, rad_recs, [])
+
+        return jsonify({'rad_data':rad_list_of_dicts}), 200
+
+    except Exception as e:
+        logging.debug(f'exception caused from radiation_analysis endpoint.  error info: {e}')
+        return jsonify({'error': 'Internal Server Error'}), 500
+
 
