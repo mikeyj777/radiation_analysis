@@ -100,7 +100,6 @@ async def run_radiation_transect(jetFireCalc, flam_output_config):
 
     if res != ResultCode.SUCCESS:
         logging.debug(f'Radiation transect calc failed.  response code: {res.name}\nresponses:  {radiation_transect.messages}')
-    logging.debug('Radiation Transect Model Complete')
     return radiation_transect
 
 def reducer(acc = [], item= None):
@@ -114,7 +113,7 @@ def reducer(acc = [], item= None):
 
 apple = 1
 
-def radiation_analysis():
+async def radiation_analysis():
 
     data = request.get_json()
     x_flare_m = float(data.get('xFlare', 45)) / 3.28084
@@ -139,10 +138,11 @@ def radiation_analysis():
         # pipe racks have heights between 7 m (23 ft) and 13 m (43 ft)
         flammable_output_config = prep_flammable_output_config(flare_position=flare_position, start_position=transect_start_pos, final_position=transect_final_pos)
 
-        radiation_transect = run_radiation_transect(jetFireCalc=jetFireCalc, flam_output_config=flammable_output_config)
+        radiation_transect = await run_radiation_transect(jetFireCalc=jetFireCalc, flam_output_config=flammable_output_config)
         rad_recs = radiation_transect.radiation_records
-
+        logging.debug(f'Radiation Transect Model Complete.  first rad rec: {rad_recs[0]}')
         rad_list_of_dicts = reduce(reducer, rad_recs, [])
+        logging.debug(f'parsed from reducer.  last record: {rad_list_of_dicts[-1]}')
 
         return jsonify({'rad_data':rad_list_of_dicts}), 200
 

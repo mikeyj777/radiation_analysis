@@ -2,6 +2,12 @@ import React from 'react';
 import Plot from 'react-plotly.js';
 
 const PlotlyViewer = ({ data }) => {
+  
+  if (!data) return;
+  if (data.length === 0) return;
+
+  console.log("data from Plotly Viewer: ", JSON.stringify(data, null, 2));
+
   const trace = {
     x: data.map(point => point.z),
     y: data.map(point => point.rad_level_w_m2),

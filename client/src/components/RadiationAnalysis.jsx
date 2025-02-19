@@ -38,7 +38,7 @@ const RadiationAnalysis = () => {
         body: JSON.stringify(formData)
       });
       const data = await response.json();
-      setPlotData(data);
+      setPlotData(data.rad_data);
     } catch (error) {
       console.error('Error:', error);
     }
