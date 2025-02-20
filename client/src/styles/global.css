@@ -5,3 +5,5 @@ import and include all other component stylesheets for reference */
 
 @import './Home.css';
 @import './functional.css';
+@import './plotlyviewer.css';
+@import './radanalysis.css';
