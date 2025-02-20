@@ -143,22 +143,6 @@ const RadiationAnalysis = () => {
       <div className="rad-content">
         {/* Left side - Visualization area */}
         <div className="rad-visualization">
-          <div className="rad-plot-container">
-            {isLoading ? (
-              <div className="rad-loading">Processing analysis</div>
-            ) : error ? (
-              <div className="rad-placeholder">
-                <p>Error: {error}</p>
-                <p>Please try again or check your connection</p>
-              </div>
-            ) : plotData.length > 0 ? (
-              <PlotlyViewer data={plotData} />
-            ) : (
-              <div className="rad-placeholder">
-                <p>Enter parameters and submit to view radiation analysis</p>
-              </div>
-            )}
-          </div>
           
           {/* Critical Results Section */}
           {plotData.length > 0 && !isLoading && (
@@ -209,6 +193,23 @@ const RadiationAnalysis = () => {
               </div>
             </div>
           )}
+          
+          <div className="rad-plot-container">
+            {isLoading ? (
+              <div className="rad-loading">Processing analysis</div>
+            ) : error ? (
+              <div className="rad-placeholder">
+                <p>Error: {error}</p>
+                <p>Please try again or check your connection</p>
+              </div>
+            ) : plotData.length > 0 ? (
+              <PlotlyViewer data={plotData} />
+            ) : (
+              <div className="rad-placeholder">
+                <p>Enter parameters and submit to view radiation analysis</p>
+              </div>
+            )}
+          </div>
 
           {plotData.length > 0 && !isLoading && (
             <div className="rad-summary">
@@ -248,6 +249,23 @@ const RadiationAnalysis = () => {
         {/* Right side - Parameters */}
         <div className="rad-parameters">
           <form onSubmit={handleSubmit} className="rad-form">
+            <div className="rad-button-group">
+              <button 
+                type="submit" 
+                className="rad-button rad-button-primary"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Processing...' : 'Run Analysis'}
+              </button>
+              <button 
+                type="button" 
+                className="rad-button rad-button-secondary"
+                onClick={handleReset}
+                disabled={isLoading}
+              >
+                Reset
+              </button>
+            </div>
             <div className="rad-parameter-section">
               <h2>Flare Position</h2>
               <div className="rad-input-group">
@@ -366,24 +384,6 @@ const RadiationAnalysis = () => {
                   required 
                 />
               </div>
-            </div>
-
-            <div className="rad-button-group">
-              <button 
-                type="submit" 
-                className="rad-button rad-button-primary"
-                disabled={isLoading}
-              >
-                {isLoading ? 'Processing...' : 'Run Analysis'}
-              </button>
-              <button 
-                type="button" 
-                className="rad-button rad-button-secondary"
-                onClick={handleReset}
-                disabled={isLoading}
-              >
-                Reset
-              </button>
             </div>
           </form>
         </div>

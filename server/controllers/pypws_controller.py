@@ -28,13 +28,14 @@ def load_vlc():
         vlc = pickle.load(f)
     return vlc
 
-def run_jet_fire_calc(vlc):
+def run_jet_fire_calc(vlc:VesselLeakCalculation, stack_height_m):
     material = vlc.exit_material
     discharge_records = vlc.discharge_records
     discharge_record_count = 0
     if discharge_records is not None:
         discharge_record_count = len(discharge_records)
     discharge_result = vlc.discharge_result
+    discharge_result.height = stack_height_m
     weather = prep_weather() # defaults to nighttime stable wx condition
     substrate = prep_substrate() # defaults to concrete with no containment
     flammable_parameters = FlammableParameters()
@@ -133,7 +134,7 @@ async def radiation_analysis():
     
     try:
         vlc = load_vlc()
-        jetFireCalc = run_jet_fire_calc(vlc)
+        jetFireCalc = run_jet_fire_calc(vlc, stack_height_m=z_flare_m)
 
         # pipe racks have heights between 7 m (23 ft) and 13 m (43 ft)
         flammable_output_config = prep_flammable_output_config(flare_position=flare_position, start_position=transect_start_pos, final_position=transect_final_pos)
