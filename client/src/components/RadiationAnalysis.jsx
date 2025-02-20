@@ -1,5 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PlotlyViewer from './PlotlyViewer';
+
+// Define target elevations
+const targetElevations = {
+  groundLevel: 0,
+  bottomPipeRack: 23 / 3.28084,
+  topPipeRack: 42 / 3.28084
+};
 
 const formDataDefault = {
   xFlare: 45,
@@ -22,6 +29,30 @@ const RadiationAnalysis = () => {
   const [plotData, setPlotData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [criticalData, setCriticalData] = useState({
+    groundLevel: null,
+    bottomPipeRack: null,
+    topPipeRack: null
+  });
+
+  /**
+   * Calculate critical radiation levels at target elevations when plot data changes
+   */
+  useEffect(() => {
+    if (plotData.length > 0) {
+      const findClosestData = (targetZ) => {
+        return plotData.reduce((prev, curr) =>
+          Math.abs(curr.z - targetZ) < Math.abs(prev.z - targetZ) ? curr : prev
+        );
+      };
+ 
+      setCriticalData({
+        groundLevel: findClosestData(targetElevations.groundLevel),
+        bottomPipeRack: findClosestData(targetElevations.bottomPipeRack),
+        topPipeRack: findClosestData(targetElevations.topPipeRack)
+      });
+    }
+  }, [plotData]);
 
   /**
    * Handle form input changes
@@ -75,6 +106,11 @@ const RadiationAnalysis = () => {
     setFormData(formDataDefault);
     setPlotData([]);
     setError(null);
+    setCriticalData({
+      groundLevel: null,
+      bottomPipeRack: null,
+      topPipeRack: null
+    });
   };
 
   /**
@@ -86,6 +122,16 @@ const RadiationAnalysis = () => {
     const dy = formData.yTransectFinal - formData.yTransectStart;
     const dz = formData.zTransectFinal - formData.zTransectStart;
     return Math.sqrt(dx*dx + dy*dy + dz*dz).toFixed(2);
+  };
+
+  /**
+   * Format radiation level for display
+   * @param {number} value - Radiation level in W/m²
+   * @returns {string} Formatted radiation level
+   */
+  const formatRadiationLevel = (value) => {
+    if (value === null || value === undefined) return 'N/A';
+    return value.toFixed(2) + ' W/m²';
   };
 
   return (
@@ -114,10 +160,60 @@ const RadiationAnalysis = () => {
             )}
           </div>
           
+          {/* Critical Results Section */}
           {plotData.length > 0 && !isLoading && (
-            <div className="rad-imagery">
+            <div className="rad-critical-results">
+              <h2>Critical Locations Analysis</h2>
+              <div className="rad-results-grid">
+                <div className="rad-result-item">
+                  <div className="rad-result-location">Ground Level</div>
+                  <div className="rad-result-value">
+                    {criticalData.groundLevel ? (
+                      <span className={`rad-radiation-level ${getRiskClass(criticalData.groundLevel.rad_level_w_m2)}`}>
+                        {formatRadiationLevel(criticalData.groundLevel.rad_level_w_m2)}
+                      </span>
+                    ) : 'N/A'}
+                  </div>
+                  <div className="rad-result-elevation">
+                    Elevation: {criticalData.groundLevel ? (criticalData.groundLevel.z * 3.28084).toFixed(1) : 0} ft
+                  </div>
+                </div>
+                
+                <div className="rad-result-item">
+                  <div className="rad-result-location">Bottom of Pipe Rack</div>
+                  <div className="rad-result-value">
+                    {criticalData.bottomPipeRack ? (
+                      <span className={`rad-radiation-level ${getRiskClass(criticalData.bottomPipeRack.rad_level_w_m2)}`}>
+                        {formatRadiationLevel(criticalData.bottomPipeRack.rad_level_w_m2)}
+                      </span>
+                    ) : 'N/A'}
+                  </div>
+                  <div className="rad-result-elevation">
+                    Elevation: 23.0 ft
+                  </div>
+                </div>
+                
+                <div className="rad-result-item">
+                  <div className="rad-result-location">Top of Pipe Rack</div>
+                  <div className="rad-result-value">
+                    {criticalData.topPipeRack ? (
+                      <span className={`rad-radiation-level ${getRiskClass(criticalData.topPipeRack.rad_level_w_m2)}`}>
+                        {formatRadiationLevel(criticalData.topPipeRack.rad_level_w_m2)}
+                      </span>
+                    ) : 'N/A'}
+                  </div>
+                  <div className="rad-result-elevation">
+                    Elevation: 42.0 ft
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {plotData.length > 0 && !isLoading && (
+            <div className="rad-summary">
               <h2>Analysis Summary</h2>
-              <table>
+              <table className="rad-summary-table">
                 <tbody>
                   <tr>
                     <td>Flare Position:</td>
@@ -295,5 +391,18 @@ const RadiationAnalysis = () => {
     </div>
   );
 };
+
+/**
+ * Helper function to determine risk class based on radiation level
+ * @param {number} level - Radiation level in W/m²
+ * @returns {string} CSS class name for risk level
+ */
+function getRiskClass(level) {
+  if (level === null || level === undefined) return '';
+  if (level < 1.58) return 'rad-risk-low';
+  if (level < 4.73) return 'rad-risk-medium';
+  if (level < 6.31) return 'rad-risk-high';
+  return 'rad-risk-critical';
+}
 
 export default RadiationAnalysis;

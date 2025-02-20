@@ -83,11 +83,128 @@
   }
 }
 
+/* Critical Results Section */
+.rad-critical-results {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+}
+
+.rad-critical-results h2 {
+  color: #334155;
+  font-size: 1.25rem;
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.rad-results-grid {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.rad-result-item {
+  flex: 1;
+  min-width: 200px;
+  background-color: #f8fafc;
+  border-radius: 6px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-left: 4px solid #cbd5e1;
+}
+
+.rad-result-location {
+  font-weight: 600;
+  color: #334155;
+  font-size: 1rem;
+}
+
+.rad-result-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: monospace;
+}
+
+.rad-result-elevation {
+  color: #64748b;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.rad-radiation-level {
+  display: inline-block;
+  padding: 0.25rem 0;
+}
+
+/* Risk level colorization */
+.rad-risk-low {
+  color: #10b981;
+  border-bottom: 3px solid #10b981;
+}
+
+.rad-risk-medium {
+  color: #f59e0b;
+  border-bottom: 3px solid #f59e0b;
+}
+
+.rad-risk-high {
+  color: #ef4444;
+  border-bottom: 3px solid #ef4444;
+}
+
+.rad-risk-critical {
+  color: #7f1d1d;
+  background-color: #fee2e2;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* Summary table */
+.rad-summary {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+}
+
+.rad-summary h2 {
+  color: #334155;
+  font-size: 1.25rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.rad-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.rad-summary-table td {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.rad-summary-table td:first-child {
+  font-weight: 500;
+  color: #64748b;
+  width: 40%;
+}
+
+.rad-summary-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Area imagery */
 .rad-imagery {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
 .rad-imagery h2 {
@@ -220,6 +337,28 @@
   .rad-parameters {
     max-width: none;
   }
+  
+  .rad-results-grid {
+    flex-direction: column;
+  }
+  
+  .rad-result-item {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .rad-results-grid {
+    gap: 1rem;
+  }
+  
+  .rad-result-item {
+    padding: 1rem;
+  }
+  
+  .rad-result-value {
+    font-size: 1.25rem;
+  }
 }
 
 @media (max-width: 640px) {
@@ -238,6 +377,18 @@
   
   .rad-visualization {
     gap: 0.75rem;
+  }
+  
+  .rad-critical-results,
+  .rad-summary,
+  .rad-imagery {
+    padding: 1rem;
+  }
+  
+  .rad-critical-results h2,
+  .rad-summary h2,
+  .rad-imagery h2 {
+    font-size: 1.125rem;
   }
   
   .rad-form {
