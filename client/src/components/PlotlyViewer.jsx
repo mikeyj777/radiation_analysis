@@ -13,9 +13,6 @@ const PlotlyViewer = ({ data }) => {
     return null;
   }
 
-  // Log data for debugging purposes
-  console.log("data from Plotly Viewer: ", JSON.stringify(data, null, 2));
-
   // Create the trace configuration for the plot
   const trace = {
     x: data.map(point => point.z * 3.28084),  // Convert to feet

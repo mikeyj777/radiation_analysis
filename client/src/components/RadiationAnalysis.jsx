@@ -9,13 +9,13 @@ const targetElevations = {
 };
 
 const formDataDefault = {
-  xFlare: 45,
+  xFlare: 0,
   yFlare: 0,
   zFlare: 50,
-  xTransectStart: 0,
+  xTransectStart: 45,
   yTransectStart: 0,
   zTransectStart: 0,
-  xTransectFinal: 0,
+  xTransectFinal: 45,
   yTransectFinal: 0,
   zTransectFinal: 200
 };
