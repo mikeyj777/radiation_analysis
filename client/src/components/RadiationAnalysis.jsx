@@ -77,7 +77,7 @@ const RadiationAnalysis = () => {
     setPlotData([]);
     
     try {
-      const response = await fetch('http://localhost:8081/api/radiation_analysis', {
+      const response = await fetch('http://WSSAFER02:8081/api/radiation_analysis', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
