@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import PlotlyViewer from './PlotlyViewer';
 
 // Define target elevations
@@ -77,7 +77,7 @@ const RadiationAnalysis = () => {
     setPlotData([]);
     
     try {
-      const response = await fetch('http://localhost:5000/api/radiation_analysis', {
+      const response = await fetch('http://localhost:8081/api/radiation_analysis', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

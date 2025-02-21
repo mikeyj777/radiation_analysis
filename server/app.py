@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %
 app = Flask(__name__)
 CORS(app, resources={
     r"/*": {  # This specifically matches your API routes
-        "origins": ["http://localhost:3000", "http://WSSAFER02"],
+        "origins": ["http://localhost:3000", "http://WSSAFER02:8082", "http://localhost:8082", "http://localhost:8082/rad"],
         "methods": ["GET", "POST", "OPTIONS"],  # Explicitly allow methods
         "allow_headers": ["Content-Type"]  # Allow common headers
     }
@@ -22,6 +22,3 @@ CORS(app, resources={
 async def rad_route():
     logging.debug("here on the back end.")
     return await radiation_analysis()
-
-if __name__ == '__main__':
-    app.run(debug=True)
